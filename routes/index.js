@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 const express = require('express');
 const router = express.Router();
 
