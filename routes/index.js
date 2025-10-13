@@ -1,6 +1,9 @@
-import fetch from "node-fetch";
 const express = require('express');
 const router = express.Router();
+
+// ✅ fetch compatible con CommonJS (Node 16/18 en DO)
+const fetch = global.fetch || ((...args) =>
+  import('node-fetch').then(({ default: f }) => f(...args)));
 
 const SYSCOM_BASE = 'https://developers.syscom.mx';
 
@@ -37,6 +40,7 @@ async function proxyToSyscom(req, res) {
   try {
     const token = await getAccessToken();
 
+    // Construir URL destino (mantiene path y query)
     const target = new URL(`${SYSCOM_BASE}/api/v1${req.path}`);
     for (const [k, v] of Object.entries(req.query || {})) {
       target.searchParams.append(k, v);
@@ -51,8 +55,12 @@ async function proxyToSyscom(req, res) {
     };
 
     if (['POST', 'PUT', 'PATCH'].includes(req.method.toUpperCase())) {
-      init.headers['Content-Type'] = req.headers['content-type'] || 'application/json';
-      init.body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body || {});
+      init.headers['Content-Type'] =
+        req.headers['content-type'] || 'application/json';
+      init.body =
+        typeof req.body === 'string'
+          ? req.body
+          : JSON.stringify(req.body || {});
     }
 
     const resp = await fetch(target, init);
@@ -67,10 +75,10 @@ async function proxyToSyscom(req, res) {
   }
 }
 
-// Ruta de prueba
+// Salud
 router.get('/health', (req, res) => res.json({ ok: true }));
 
-// Proxy para cualquier ruta restante
+// Proxy para cualquier ruta restante (ej. /api/marcas, /api/productos, etc.)
 router.all('*', proxyToSyscom);
 
 module.exports = router;
