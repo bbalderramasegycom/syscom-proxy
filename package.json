@@ -1,6 +1,8 @@
 {
   "name": "syscom-proxy",
   "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
   "description": "Servidor proxy para conectar la API de SYSCOM con segycom.mx",
   "main": "app.js",
   "scripts": {
