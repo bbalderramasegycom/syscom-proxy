@@ -19,8 +19,8 @@
     "mersenne-twister": "^1.1.0",
     "morgan": "^1.10.1",
     "pug": "^3.0.3",
-    "uglify-js": "^3.19.3"
-    "node-fetch": "^3.3.2"
+    "uglify-js": "^3.19.3",
+    "node-fetch": "^3.3.2",
   },
   "author": "bbalderramasegycom",
   "license": "ISC"
