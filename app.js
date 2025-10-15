@@ -86,6 +86,29 @@ app.get('/api/syscom/*', async (req, res) => {
   }
 });
 
+// --- PROXY PARA API Y AUTH GENERALES ---
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+// 1) API genérica: /api/*  -> https://www.segycom.mx/*  (quitamos el prefijo /api)
+app.use(
+  '/api',
+  createProxyMiddleware({
+    target: 'https://www.segycom.mx',
+    changeOrigin: true,
+    pathRewrite: { '^/api': '' }
+  })
+);
+
+// 2) AUTH: /auth/* -> https://www.segycom.mx/auth/* (tal cual)
+app.use(
+  '/auth',
+  createProxyMiddleware({
+    target: 'https://www.segycom.mx',
+    changeOrigin: true
+  })
+);
+
+
 // 404 y handler de errores (igual que estaba)
 app.use(function(req, res, next) {
   next(createError(404));
