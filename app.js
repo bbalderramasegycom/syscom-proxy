@@ -95,7 +95,7 @@ app.use(
   createProxyMiddleware({
     target: 'https://www.segycom.mx',
     changeOrigin: true,
-    pathRewrite: { '^/api': '' }
+    // NO pathRewrite: conservamos /api tal cual
   })
 );
 
